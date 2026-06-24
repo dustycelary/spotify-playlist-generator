@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+import pprint
 import random
 
 import dotenv
@@ -21,30 +22,24 @@ sp = spotipy.Spotify(auth_manager=spotify_authorisation)
 with open("band_info.json") as file:
     playlist_dictionary = json.load(file)
 
-target_playlists = [
-    "foster_the_people",
-    "vaccines",
-    "bloc_party",
-    "cage_the_elephant",
-    "two_door_cinema_club",
-    "wombats",
-    "wallows",
-    "alt_j",
-    "the_view",
-    "sundara_karma",
-    "strokes",
-]
-
 
 all_ids = []
 for i in playlist_dictionary.keys():
     print(f"this has been accepted : {i}")
     playlist_sugar = playlist_dictionary[i]
+    pprint.pprint(f"Playlist sugar: {playlist_sugar}")
     playlist_all_info = sp.playlist_tracks(
-        playlist_id=playlist_sugar, fields="items(track(album,id))"
+        playlist_id=playlist_sugar, fields="items(track(album,id,name))"
     )
+    # with open("test.json", "a") as file:
+    #     json.dump(playlist_all_info, file, indent=2)
+
     for item_index in range(len(playlist_all_info["items"])):
         all_ids.append(playlist_all_info["items"][item_index]["track"]["id"])
+
+# sys.exit()
+
+
 playlist_ids = []
 for i in range(40):
     current_track = random.choice(all_ids)
